@@ -1,0 +1,22 @@
+.example-container mat-form-field + mat-form-field {
+  margin-left: 8px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-content {
+  width: 450px;
+  @media (max-width: 640px) {
+    width: 90vw !important;
+  }
+}
+
+h2 {
+  width: 100% !important;
+}
+
+mat-dialog-actions {
+  width: 100% !important;
+}
