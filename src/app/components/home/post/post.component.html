@@ -1,0 +1,20 @@
+<mat-card class="example-card mb-10 pb-3" appearance="outlined">
+  <mat-card-header class="ml-2">
+    <img mat-card-image [src]="ProfileImageSrc()" alt="profile image" class="rounded-[50%] w-[30px] h-[30px]" />
+    <h2 class="ml-2 flex items-center font-medium">
+      {{ postData()?.author?.username }}
+    </h2>
+  </mat-card-header>
+  @if (imageSrc()) {
+  <img mat-card-image [src]="imageSrc()" alt="post image" class="m-4 rounded-md" />
+  }
+  <mat-card-content>
+    <p class="text-gray-500">{{ postData()?.created_at }}</p>
+    <p>
+      {{ postData()?.body }}
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-fab extended class="ml-3 mt-3">Comment</button>
+  </mat-card-actions>
+</mat-card>
