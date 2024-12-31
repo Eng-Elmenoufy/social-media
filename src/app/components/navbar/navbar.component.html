@@ -1,0 +1,51 @@
+<mat-toolbar class="shadow-md rounded-b-lg flex justify-between !mb-10">
+  <div class="flex items-center justify-items-center">
+    <button>
+      <img src="m.jpg" alt="M4 Logo" />
+    </button>
+    <button mat-button class="mx-5">
+      <span class="text-blue-500 text-xl flex items-center">
+        <mat-icon class="mx-auto">home</mat-icon>
+      </span>
+    </button>
+    <button mat-button>
+      <span class="text-blue-500 text-xl flex items-center">
+        <mat-icon class="mx-auto">person</mat-icon>
+      </span>
+    </button>
+  </div>
+  @if (!auth.getToken()) {
+  <div>
+    <button mat-button class="sm:!hidden">
+      <span class="text-blue-500 text-xl flex items-center">
+        <mat-icon class="mx-auto">menu</mat-icon>
+      </span>
+    </button>
+    <button color="primary" class="mr-5 !hidden sm:!inline" mat-stroked-button (click)="openLogin()">
+      Login
+    </button>
+    <button color="primary" mat-stroked-button (click)="openRegister()" class="!hidden sm:!inline">
+      Register
+    </button>
+  </div>
+  } @else {
+  <div class="flex items-center">
+    <div class="flex mr-4">
+      <img [src]="auth.getUser()?.profile_image" class="rounded-[50%] w-[30px] h-[30px] mr-2" alt="profile image" />
+
+      <h6 class="flex items-center font-medium !text-base ml-2">
+        {{ auth.getUser()?.username }}
+      </h6>
+    </div>
+    <!-- <button
+      color="primary"
+      mat-stroked-button
+      (click)="openRegister()"
+      class="!hidden sm:!inline"
+    >
+      Logout
+    </button> -->
+    <button mat-raised-button (click)="openLogout('0ms', '0ms')">Logout</button>
+  </div>
+  }
+</mat-toolbar>
