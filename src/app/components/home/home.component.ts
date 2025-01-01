@@ -11,17 +11,21 @@ import { Post } from '../../models/post.model';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-  posts: WritableSignal<Post[]> = signal([]);
+  posts = signal<Post[]>([]);
   private auth = inject(AuthService);
 
   constructor() {
-    this.auth.getPosts().subscribe(
-      (posts: any) => {
+    this.auth.getPosts().subscribe({
+      next: (posts) => {
         this.posts.set(posts.data);
+        console.log(posts);
       },
-      (error) => {
-        console.error('Error fetching posts:', error);
-      }
-    );
+      error: (err) => {
+        this.auth.message.set({
+          type: 'error',
+          content: err.error.message,
+        });
+      },
+    });
   }
 }

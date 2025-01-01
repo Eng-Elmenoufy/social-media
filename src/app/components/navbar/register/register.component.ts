@@ -1,14 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  Form,
   FormControl,
   FormsModule,
   ReactiveFormsModule,
@@ -78,7 +72,7 @@ export class RegisterComponent {
     if (this.password.hasError('required')) {
       this.errorPassword.set('You must enter a password');
     } else if (this.password.hasError('minlength')) {
-      this.errorPassword.set('your password must be at least 8 characters');
+      this.errorPassword.set('your password must be at least 6 characters');
     } else {
       this.errorPassword.set('');
     }
@@ -121,7 +115,19 @@ export class RegisterComponent {
         email: this.email.value!,
       };
       this.auth.Register(formData).subscribe({
-        next: () => {},
+        next: () => {
+          this.auth.message.set({
+            type: 'success',
+            content:
+              'Congratulations! Your registration is complete. Enjoy using our Website 🎉',
+          });
+        },
+        error: (err) => {
+          this.auth.message.set({
+            type: 'error',
+            content: err.message,
+          });
+        },
       });
     }
   }

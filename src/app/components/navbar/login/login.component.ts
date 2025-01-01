@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -16,6 +11,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { merge } from 'rxjs';
+
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
@@ -70,9 +66,24 @@ export class LoginComponent {
   }
 
   onLogin() {
-    this.auth.Login({
-      username: this.userName.value!,
-      password: this.password.value!,
-    });
+    this.auth
+      .Login({
+        username: this.userName.value!,
+        password: this.password.value!,
+      })
+      .subscribe({
+        next: () => {
+          this.auth.message.set({
+            type: 'success',
+            content: 'Welcome back! You are now logged in.',
+          });
+        },
+        error: (err) => {
+          this.auth.message.set({
+            type: 'error',
+            content: err.error.message,
+          });
+        },
+      });
   }
 }

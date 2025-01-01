@@ -1,6 +1,44 @@
+@use "@angular/material" as mat;
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+
+.error {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: #f8d7da,
+      button-color: #f8d7da,
+      supporting-text-color: red,
+    )
+  );
+}
+
+.success {
+  @include mat.snack-bar-overrides(
+    (
+      container-color: #d4edda,
+      button-color: #d4edda,
+      supporting-text-color: green,
+    )
+  );
+}
+
+// :root {
+//   @include mat.snack-bar-overrides(
+//     (
+//       container-color: red,
+//       supporting-text-color: red,
+//     )
+//   );
+// }
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

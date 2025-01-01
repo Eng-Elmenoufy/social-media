@@ -1,9 +1,4 @@
-import {
-  Component,
-  ChangeDetectionStrategy,
-  inject,
-  OnInit,
-} from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -24,8 +19,8 @@ import { User } from '../../models/user.model';
 export class NavbarComponent {
   readonly dialog = inject(MatDialog);
   auth = inject(AuthService);
-  token = this.auth.getToken();
-  user: User | undefined = this.auth.getUser();
+  token: Signal<string> = this.auth.token;
+  user: Signal<User> = this.auth.user;
 
   openLogin() {
     const dialogRef = this.dialog.open(LoginComponent);
