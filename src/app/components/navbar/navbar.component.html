@@ -1,14 +1,14 @@
 <mat-toolbar class="shadow-md rounded-b-lg flex justify-between !mb-10">
   <div class="flex items-center justify-items-center">
-    <button>
+    <button routerLink="/">
       <img src="m.jpg" alt="M4 Logo" />
     </button>
-    <button mat-button class="mx-5">
+    <button mat-button class="mx-5" routerLink="/">
       <span class="text-blue-500 text-xl flex items-center">
         <mat-icon class="mx-auto">home</mat-icon>
       </span>
     </button>
-    <button mat-button>
+    <button mat-button [routerLink]="['/profile', user().id]">
       <span class="text-blue-500 text-xl flex items-center">
         <mat-icon class="mx-auto">person</mat-icon>
       </span>
