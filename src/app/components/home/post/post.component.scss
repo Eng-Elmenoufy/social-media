@@ -10,6 +10,23 @@
   );
 }
 
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+.btn-edit {
+  @include mat.button-overrides(
+    (
+      filled-container-color: #0b5ed7,
+    )
+  );
+}
+
+.btn-delete {
+  @include mat.button-overrides(
+    (
+      filled-container-color: #dc3545,
+    )
+  );
+}
+
 .card {
   width: 100%;
 }

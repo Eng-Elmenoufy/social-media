@@ -1,9 +1,20 @@
 <mat-card class="card mb-10 pb-3" appearance="outlined">
   <mat-card-header class="ml-2">
-    <img mat-card-image [src]="ProfileImageSrc()" alt="profile image" class="rounded-[50%] w-[30px] h-[30px]" />
-    <h2 class="ml-2 flex items-center font-medium">
-      {{ postData()?.author?.username }}
-    </h2>
+    <div class="flex justify-between !w-full">
+      <div class="flex cursor-pointer" [routerLink]="['/profile/', postData()?.author?.id]">
+        <img mat-card-image [src]="ProfileImageSrc()" alt="profile image"
+          class="!rounded-full w-[30px] h-[30px] overflow-hidden" />
+        <h2 class="ml-2 flex items-center font-medium">
+          {{ postData()?.author?.username }}
+        </h2>
+      </div>
+      @if (postData()?.author?.id === userId) {
+      <div>
+        <button mat-flat-button class="btn-edit mr-3">Edit</button>
+        <button mat-flat-button class="btn-delete">Delete</button>
+      </div>
+      }
+    </div>
   </mat-card-header>
   @if (imageSrc()) {
   <img mat-card-image [src]="imageSrc()" alt="post image" class="m-4 rounded-md" />

@@ -18,7 +18,6 @@ export class HomeComponent {
     this.auth.getPosts().subscribe({
       next: (posts) => {
         this.posts.set(posts.data);
-        console.log(posts);
       },
       error: (err) => {
         this.auth.message.set({

@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { RegisterForm } from '../models/register-form.model';
-import { Post } from '../models/post.model';
+import { Post, PostComment } from '../models/post.model';
 import { Observable, tap } from 'rxjs';
 import { User } from '../models/user.model';
 import { AuthResponse } from '../models/auth-response.model';
@@ -77,6 +77,24 @@ export class AuthService {
   getPosts(): Observable<{ data: Post[]; links: Object; meta: Object }> {
     return this.http.get<{ data: Post[]; links: Object; meta: Object }>(
       `${this.URL}/posts?limit=10&page=1`
+    );
+  }
+
+  getUserPosts(
+    userId: number
+  ): Observable<{ data: Post[]; links: Object; meta: Object }> {
+    return this.http.get<{ data: Post[]; links: Object; meta: Object }>(
+      `${this.URL}/users/${userId}/posts`
+    );
+  }
+
+  getUser(userId: number): Observable<{ data: User }> {
+    return this.http.get<{ data: User }>(`${this.URL}/users/${userId}`);
+  }
+
+  commentPost(postId: string): Observable<{ data: PostComment }> {
+    return this.http.get<{ data: PostComment }>(
+      `${this.URL}/posts/${postId}/comments`
     );
   }
 
