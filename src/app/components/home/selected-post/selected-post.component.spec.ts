@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CommentComponent } from './comment.component';
+import { CommentComponent } from './selected-post.component';
 
 describe('CommentComponent', () => {
   let component: CommentComponent;
@@ -8,9 +8,8 @@ describe('CommentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommentComponent]
-    })
-    .compileComponents();
+      imports: [CommentComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CommentComponent);
     component = fixture.componentInstance;

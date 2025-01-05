@@ -11,14 +11,11 @@ import { Post } from '../../models/post.model';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
-  posts = signal<Post[]>([]);
   private auth = inject(AuthService);
+  posts = this.auth.posts;
 
   constructor() {
     this.auth.getPosts().subscribe({
-      next: (posts) => {
-        this.posts.set(posts.data);
-      },
       error: (err) => {
         this.auth.message.set({
           type: 'error',

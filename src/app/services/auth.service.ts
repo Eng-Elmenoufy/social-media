@@ -1,8 +1,8 @@
 import { Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { RegisterForm } from '../models/register-form.model';
-import { Post, PostComment } from '../models/post.model';
+import { Post, PostComment, PostWithComments } from '../models/post.model';
 import { Observable, tap } from 'rxjs';
 import { User } from '../models/user.model';
 import { AuthResponse } from '../models/auth-response.model';
@@ -23,10 +23,18 @@ export class AuthService {
     ? signal<string>(localStorage.getItem('token')!)
     : signal<string>('');
   token = this.tokenSignal.asReadonly();
+
   private userSignal = this.browserHasLocalStorage
     ? signal<User>(JSON.parse(localStorage.getItem('user')!))
     : signal<User>('' as any);
   user = this.userSignal.asReadonly();
+
+  private postsSignal = signal<Post[]>([]);
+  posts = this.postsSignal.asReadonly();
+
+  comments = signal<PostComment[] | undefined>(undefined);
+  // comments = this.commentsSignal.asReadonly();
+
   constructor(private http: HttpClient) {}
 
   setToken(token: string) {
@@ -75,9 +83,15 @@ export class AuthService {
   }
 
   getPosts(): Observable<{ data: Post[]; links: Object; meta: Object }> {
-    return this.http.get<{ data: Post[]; links: Object; meta: Object }>(
-      `${this.URL}/posts?limit=10&page=1`
-    );
+    return this.http
+      .get<{ data: Post[]; links: Object; meta: Object }>(
+        `${this.URL}/posts?limit=20&page=3`
+      )
+      .pipe(
+        tap((res: { data: Post[]; links: Object; meta: Object }) => {
+          this.postsSignal.set(res.data);
+        })
+      );
   }
 
   getUserPosts(
@@ -92,9 +106,27 @@ export class AuthService {
     return this.http.get<{ data: User }>(`${this.URL}/users/${userId}`);
   }
 
-  commentPost(postId: string): Observable<{ data: PostComment }> {
-    return this.http.get<{ data: PostComment }>(
-      `${this.URL}/posts/${postId}/comments`
+  getPost(postId: number): Observable<{ data: PostWithComments }> {
+    return this.http
+      .get<{ data: PostWithComments }>(`${this.URL}/posts/${postId}`)
+      .pipe(
+        tap((res: { data: PostWithComments }) => {
+          this.comments.set(res.data.comments);
+        })
+      );
+  }
+  SendComment(
+    postId: number,
+    body: { body: string }
+  ): Observable<{ data: PostComment }> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token()}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.post<{ data: PostComment }>(
+      `${this.URL}/posts/${postId}/comments`,
+      body,
+      { headers }
     );
   }
 

@@ -27,6 +27,24 @@
   );
 }
 
+.input {
+  @include mat.form-field-overrides(
+    (
+      outlined-outline-color: transparent,
+      outlined-hover-outline-color: transparent,
+    )
+  );
+}
+
 .card {
   width: 100%;
+}
+
+::ng-deep {
+  .mdc-text-field--outlined {
+    background-color: white;
+  }
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
 }

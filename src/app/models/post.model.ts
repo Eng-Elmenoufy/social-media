@@ -20,6 +20,10 @@ export interface Post {
   comments_count: number;
 }
 
+export interface PostWithComments extends Post {
+  comments: PostComment[];
+}
+
 export interface PostComment {
   id: number;
   body: string;
