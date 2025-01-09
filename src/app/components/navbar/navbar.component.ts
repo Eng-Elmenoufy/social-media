@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -26,8 +26,20 @@ import { User } from '../../models/user.model';
 export class NavbarComponent {
   readonly dialog = inject(MatDialog);
   auth = inject(AuthService);
+  router = inject(Router);
   token: Signal<string> = this.auth.token;
   user: Signal<User> = this.auth.user;
+
+  userProfile() {
+    if (this.token()) {
+      this.router.navigate(['/profile', this.user().id]);
+    } else {
+      this.auth.message.set({
+        type: 'error',
+        content: 'You need to be logged in to view your profile.',
+      });
+    }
+  }
 
   openLogin() {
     const dialogRef = this.dialog.open(LoginComponent);

@@ -8,7 +8,7 @@
         <mat-icon class="mx-auto">home</mat-icon>
       </span>
     </button>
-    <button mat-button [routerLink]="['/profile', user().id]">
+    <button mat-button (click)="userProfile()">
       <span class="text-blue-500 text-xl flex items-center">
         <mat-icon class="mx-auto">person</mat-icon>
       </span>

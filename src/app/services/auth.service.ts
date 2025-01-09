@@ -19,6 +19,7 @@ export class AuthService {
   private browserHasLocalStorage: boolean =
     localStorage.getItem('token') !== null &&
     localStorage.getItem('user') !== null;
+
   private tokenSignal = this.browserHasLocalStorage
     ? signal<string>(localStorage.getItem('token')!)
     : signal<string>('');
@@ -32,7 +33,6 @@ export class AuthService {
   private postsSignal = signal<Post[]>([]);
   posts = this.postsSignal.asReadonly();
 
-  comments = signal<PostComment[] | undefined>(undefined);
   // comments = this.commentsSignal.asReadonly();
 
   constructor(private http: HttpClient) {}
@@ -85,7 +85,7 @@ export class AuthService {
   getPosts(): Observable<{ data: Post[]; links: Object; meta: Object }> {
     return this.http
       .get<{ data: Post[]; links: Object; meta: Object }>(
-        `${this.URL}/posts?limit=20&page=3`
+        `${this.URL}/posts?limit=20&page=1`
       )
       .pipe(
         tap((res: { data: Post[]; links: Object; meta: Object }) => {
@@ -107,13 +107,9 @@ export class AuthService {
   }
 
   getPost(postId: number): Observable<{ data: PostWithComments }> {
-    return this.http
-      .get<{ data: PostWithComments }>(`${this.URL}/posts/${postId}`)
-      .pipe(
-        tap((res: { data: PostWithComments }) => {
-          this.comments.set(res.data.comments);
-        })
-      );
+    return this.http.get<{ data: PostWithComments }>(
+      `${this.URL}/posts/${postId}`
+    );
   }
   SendComment(
     postId: number,
@@ -123,11 +119,17 @@ export class AuthService {
       Authorization: `Bearer ${this.token()}`,
       'Content-Type': 'application/json',
     });
-    return this.http.post<{ data: PostComment }>(
-      `${this.URL}/posts/${postId}/comments`,
-      body,
-      { headers }
-    );
+    return this.http
+      .post<{ data: PostComment }>(
+        `${this.URL}/posts/${postId}/comments`,
+        body,
+        { headers }
+      )
+      .pipe(
+        tap((res: { data: PostComment }) => {
+          this.getPost(postId);
+        })
+      );
   }
 
   logout() {

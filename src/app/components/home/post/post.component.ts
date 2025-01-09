@@ -1,4 +1,11 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
@@ -31,20 +38,24 @@ export class PostComponent {
   private auth = inject(AuthService);
   userId = this.auth.user().id;
   postData = input<Post | PostWithComments>();
+  // selectedPost = input<boolean>(false);
   comment = signal<string>('');
-  comments = this.auth.comments();
+  commented = output();
+  comments = input<PostComment[] | null>(null);
+
   imageSrc = computed(() => {
     if (typeof this.postData()?.image !== 'object') {
       return this.postData()?.image;
     }
     return undefined;
   });
-  ProfileImageSrc = computed(() => {
-    if (typeof this.postData()?.author.profile_image !== 'object') {
-      return this.postData()?.author.profile_image;
+
+  ProfileImageSrc(data: PostComment | Post | PostWithComments) {
+    if (typeof data?.author.profile_image !== 'object') {
+      return data?.author.profile_image;
     }
     return 'profile.png';
-  });
+  }
   constructor() {}
 
   sendComment() {
@@ -53,6 +64,7 @@ export class PostComponent {
       .SendComment(this.postData()!.id, { body: this.comment() })
       .subscribe({
         next: () => {
+          this.commented.emit();
           this.auth.getPost(this.postData()!.id).subscribe();
         },
       });

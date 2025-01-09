@@ -1,1 +1,1 @@
-<app-post [postData]="selectedPost()!" />
+<app-post [postData]="selectedPost()!" [comments]="comments()" (commented)="updateComments()" />

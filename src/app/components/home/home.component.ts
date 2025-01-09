@@ -1,7 +1,13 @@
-import { Component, inject, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  signal,
+  WritableSignal,
+} from '@angular/core';
+
 import { PostComponent } from './post/post.component';
 import { AuthService } from '../../services/auth.service';
-import { Post } from '../../models/post.model';
 
 @Component({
   selector: 'app-home',

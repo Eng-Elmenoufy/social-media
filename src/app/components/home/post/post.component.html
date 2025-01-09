@@ -2,7 +2,7 @@
   <mat-card-header class="ml-2">
     <div class="flex justify-between !w-full">
       <div class="flex cursor-pointer" [routerLink]="['/profile/', postData()?.author?.id]">
-        <img mat-card-image [src]="ProfileImageSrc()" alt="profile image"
+        <img mat-card-image [src]="ProfileImageSrc(postData()!)" alt="profile image"
           class="!rounded-full w-[30px] h-[30px] overflow-hidden" />
         <h2 class="ml-2 flex items-center font-medium">
           {{ postData()?.author?.username }}
@@ -26,14 +26,15 @@
     </p>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-fab extended class="ml-3 mt-3" [routerLink]="['/post/', postData()?.id]">Comment</button>
+    <button mat-fab extended class="ml-3 mt-3" [routerLink]="['/post/', postData()?.id]">({{ postData()?.comments_count
+      }}) Comments</button>
   </mat-card-actions>
-  @if (comments) {
+  @if (comments() !== null) {
   <div class="bg-[#d9dee7] p-5 m-4 rounded-md ">
-    @for (comment of comments; track comment.id){
+    @for (comment of comments(); track comment.id){
     <div class="p-4 bg-white mb-4 rounded-md">
-      <header class="flex">
-        <img mat-card-image [src]="comment.author.profile_image" alt="profile image"
+      <header class="comment-header flex cursor-pointer" [routerLink]="['/profile/', comment?.author?.id]">
+        <img mat-card-image [src]="ProfileImageSrc(comment)" alt="profile image"
           class="!rounded-full w-[30px] h-[30px] overflow-hidden" />
         <h2 class="ml-2 flex items-center font-medium">
           {{ comment?.author?.username }}
