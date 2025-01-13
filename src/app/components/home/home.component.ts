@@ -1,10 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { PostComponent } from './post/post.component';
 import { AuthService } from '../../services/auth.service';

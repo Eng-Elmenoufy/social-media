@@ -16,7 +16,7 @@ export class ProfileComponent implements OnInit {
   private auth = inject(AuthService);
   userId = signal<string | null>('');
   user = signal<User | null>(null);
-  posts = signal<Post[]>([]);
+  posts = this.auth.userPosts;
 
   ProfileImageSrc = computed(() => {
     if (typeof this.user()?.profile_image !== 'object') {
@@ -43,9 +43,6 @@ export class ProfileComponent implements OnInit {
     });
 
     this.auth.getUserPosts(Number(this.userId())).subscribe({
-      next: (posts) => {
-        this.posts.set(posts.data.reverse());
-      },
       error: (err) => {
         this.auth.message.set({
           type: 'error',

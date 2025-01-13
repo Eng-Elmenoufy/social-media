@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { RegisterForm } from '../models/register-form.model';
 import { Post, PostComment, PostWithComments } from '../models/post.model';
-import { Observable, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { User } from '../models/user.model';
 import { AuthResponse } from '../models/auth-response.model';
 
@@ -32,6 +32,9 @@ export class AuthService {
 
   private postsSignal = signal<Post[]>([]);
   posts = this.postsSignal.asReadonly();
+
+  private userPostsSignal = signal<Post[]>([]);
+  userPosts = this.userPostsSignal.asReadonly();
 
   // comments = this.commentsSignal.asReadonly();
 
@@ -90,16 +93,24 @@ export class AuthService {
       .pipe(
         tap((res: { data: Post[]; links: Object; meta: Object }) => {
           this.postsSignal.set(res.data);
-        })
+        }),
+        switchMap(() => this.getUserPosts(this.user().id))
       );
   }
 
   getUserPosts(
-    userId: number
+    userId: number,
+    updateUserPosts: boolean = false
   ): Observable<{ data: Post[]; links: Object; meta: Object }> {
-    return this.http.get<{ data: Post[]; links: Object; meta: Object }>(
-      `${this.URL}/users/${userId}/posts`
-    );
+    return this.http
+      .get<{ data: Post[]; links: Object; meta: Object }>(
+        `${this.URL}/users/${userId}/posts`
+      )
+      .pipe(
+        tap((res: { data: Post[]; links: Object; meta: Object }) => {
+          this.userPostsSignal.set(res.data.reverse());
+        })
+      );
   }
 
   getUser(userId: number): Observable<{ data: User }> {
@@ -111,6 +122,25 @@ export class AuthService {
       `${this.URL}/posts/${postId}`
     );
   }
+
+  addPost(postData: any) {
+    const formData = new FormData();
+    formData.append('title', postData.title);
+    formData.append('body', postData.body);
+    formData.append('image', postData.image);
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token()}`,
+    });
+    return this.http
+      .post<{ data: Post }>(`${this.URL}/posts`, formData, { headers })
+      .pipe(
+        switchMap(() => {
+          return this.getPosts();
+        })
+      );
+  }
+
   SendComment(
     postId: number,
     body: { body: string }
