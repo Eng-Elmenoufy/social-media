@@ -12,13 +12,11 @@ import { RouterModule } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
-import {
-  Post,
-  PostComment,
-  PostWithComments,
-} from '../../../models/post.model';
-import { AuthService } from '../../../services/auth.service';
+import { Post, PostComment, PostWithComments } from '../../models/post.model';
+import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { FormComponent } from '../form/form.component';
 
 @Component({
   selector: 'app-post',
@@ -36,6 +34,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class PostComponent {
   private auth = inject(AuthService);
+  readonly dialog = inject(MatDialog);
   userId = this.auth.user().id;
   postData = input<Post | PostWithComments>();
   // selectedPost = input<boolean>(false);
@@ -69,5 +68,39 @@ export class PostComponent {
         },
       });
     this.comment.set('');
+  }
+
+  deletePost() {
+    this.dialog.open(FormComponent, {
+      data: {
+        type: 'Delete',
+        postData: this.postData(),
+      },
+    });
+  }
+
+  updatePost() {
+    this.dialog.open(FormComponent, {
+      data: {
+        type: 'Update Post',
+        postData: this.postData(),
+        formsFields: [
+          {
+            label: 'Title',
+            variable: 'title',
+            methodForUpdateError: 'updateErrorTitle',
+            errorVariable: 'errorTitle',
+            type: 'text',
+          },
+          {
+            label: 'Body',
+            variable: 'body',
+            methodForUpdateError: 'updateErrorBody',
+            errorVariable: 'errorBody',
+            type: 'textarea',
+          },
+        ],
+      },
+    });
   }
 }

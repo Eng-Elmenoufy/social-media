@@ -10,8 +10,8 @@
       </div>
       @if (postData()?.author?.id === userId) {
       <div>
-        <button mat-flat-button class="btn-edit mr-3">Edit</button>
-        <button mat-flat-button class="btn-delete">Delete</button>
+        <button mat-flat-button class="btn-edit mr-3" (click)="updatePost()">Edit</button>
+        <button mat-flat-button class="btn-delete" (click)="deletePost()">Delete</button>
       </div>
       }
     </div>
@@ -21,8 +21,8 @@
   }
   <mat-card-content class="ml-2 mt-4">
     <p class="text-gray-500">{{ postData()?.created_at }}</p>
-    <h1 class="text-2xl">{{postData()?.title}}</h1>
-    <p class="text-gray-500">
+    <h1 class="text-2xl break-words">{{postData()?.title}}</h1>
+    <p class="text-gray-500 break-words">
       {{ postData()?.body }}
     </p>
   </mat-card-content>
