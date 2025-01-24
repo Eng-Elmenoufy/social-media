@@ -1,0 +1,55 @@
+<div [ngClass]="{'warning bg-[#FDECEC]': data.type === 'Delete' || data.type === 'Logout'}">
+
+  <h2 mat-dialog-title
+    [ngClass]="{'warning !text-[#B22222]': data.type === 'Delete' || data.type === 'Logout', '!text-blue-700': data.type !== 'Delete' && data.type !== 'Logout'}">
+    {{data.type}}</h2>
+  <mat-dialog-content>
+    @if (data.type === 'Delete') {
+    Are you sure you want to delete this post?
+    }
+    @else if (data.type === 'Logout') {
+    Would you like to Logout from your acount?
+    }
+    @else {
+    @for (formField of data.formsFields; track formField.label) {
+    @if (formField.type === 'image') {
+    <div class="file-input-container">
+      <label class="block text-base font-medium pl-1 mb-1">Profile Image</label>
+      <input (change)="imageUpload($event)" type="file"
+        class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-violet-50 file:text-blue-700 hover:file:bg-violet-100" />
+    </div>
+    }
+    @else if (formField.type === 'textarea') {
+    <div class="mb-2">
+      <label class="block text-base font-medium pl-1 mb-1">{{formField.label}}</label>
+      <mat-form-field appearance="outline">
+        <textarea matInput [placeholder]="'Enter ' + formField.label" [formControl]="this[formField.variable]"
+          (blur)="this[formField.methodForUpdateError]()" required></textarea>
+        @if (this[formField.variable].invalid) {
+        <mat-error>{{this[formField.errorVariable]()}}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+    }
+    @else {
+    <div class="mb-2">
+      <label class="block text-base font-medium pl-1 mb-1">{{formField.label}}</label>
+      <mat-form-field appearance="outline">
+        <input matInput [placeholder]="'Enter ' + formField.label" [formControl]="this[formField.variable]"
+          (blur)="this[formField.methodForUpdateError]()" required [type]="formField.type" />
+        @if (this[formField.variable].invalid) {
+        <mat-error>{{this[formField.errorVariable]()}}</mat-error>
+        }
+      </mat-form-field>
+    </div>
+    }
+    }
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>{{data.type === 'Logout' ? 'No' : 'Close'}}</button>
+    <button mat-button mat-dialog-close cdkFocusInitial (click)="onSubmit()">
+      {{data.type === 'Logout' ? 'Yes' : data.type === 'Update Post' ? 'Update' : data.type }}
+    </button>
+  </mat-dialog-actions>
+</div>

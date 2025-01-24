@@ -1,0 +1,27 @@
+@use "@angular/material" as mat;
+
+// Customize the entire app. Change :root to your selector if you want to scope the styles.
+.warning {
+  @include mat.dialog-overrides(
+    (
+      supporting-text-color: #333333,
+    )
+  );
+}
+
+::ng-deep {
+  .mat-mdc-dialog-surface {
+    overflow: hidden !important;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-dialog-content {
+  width: 450px;
+  @media (max-width: 640px) {
+    width: 90vw !important;
+  }
+}
