@@ -1,15 +1,13 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, computed, inject, Signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
 
-import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
 import { AuthService } from '../../services/auth.service';
-import { LogoutComponent } from './logout/logout.component';
 import { User } from '../../models/user.model';
+import { FormComponent } from '../../shared/form/form.component';
 
 @Component({
   selector: 'app-navbar',
@@ -30,9 +28,16 @@ export class NavbarComponent {
   token: Signal<string> = this.auth.token;
   user: Signal<User> = this.auth.user;
 
+  ProfileImageSrc = computed(() => {
+    if (typeof this.user()?.profile_image !== 'object') {
+      return this.user()?.profile_image;
+    }
+    return 'profile.png';
+  });
+
   userProfile() {
     if (this.token()) {
-      this.router.navigate(['/profile', this.user().id]);
+      this.router.navigate(['/profile/', this.auth.user().id]);
     } else {
       this.auth.message.set({
         type: 'error',
@@ -42,27 +47,78 @@ export class NavbarComponent {
   }
 
   openLogin() {
-    const dialogRef = this.dialog.open(LoginComponent);
-    // dialogRef.afterClosed().subscribe((result) => {
-    //   console.log(`Dialog result: ${result}`);
-    // });
+    this.dialog.open(FormComponent, {
+      data: {
+        type: 'Login',
+        formsFields: [
+          {
+            label: 'User Name',
+            variable: 'userName',
+            methodForUpdateError: 'updateErrorUserName',
+            errorVariable: 'errorUserName',
+            type: 'text',
+          },
+          {
+            label: 'Password',
+            variable: 'password',
+            methodForUpdateError: 'updateErrorPassword',
+            errorVariable: 'errorPassword',
+            type: 'password',
+          },
+        ],
+      },
+    });
   }
 
-  openLogout(
-    enterAnimationDuration: string,
-    exitAnimationDuration: string
-  ): void {
-    this.dialog.open(LogoutComponent, {
-      width: '250px',
-      enterAnimationDuration,
-      exitAnimationDuration,
+  openLogout(): void {
+    this.dialog.open(FormComponent, {
+      data: {
+        type: 'Logout',
+      },
     });
   }
   openRegister() {
-    const dialogRef = this.dialog.open(RegisterComponent);
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
+    this.dialog.open(FormComponent, {
+      data: {
+        type: 'Register',
+        formsFields: [
+          {
+            label: 'User Name',
+            variable: 'userName',
+            methodForUpdateError: 'updateErrorUserName',
+            errorVariable: 'errorUserName',
+            type: 'text',
+          },
+          {
+            label: 'Password',
+            variable: 'password',
+            methodForUpdateError: 'updateErrorPassword',
+            errorVariable: 'errorPassword',
+            type: 'password',
+          },
+          {
+            label: 'Name',
+            variable: 'name',
+            methodForUpdateError: 'updateErrorName',
+            errorVariable: 'errorName',
+            type: 'text',
+          },
+          {
+            label: 'Email',
+            variable: 'email',
+            methodForUpdateError: 'updateErrorEmail',
+            errorVariable: 'errorEmail',
+            type: 'email',
+          },
+          {
+            label: 'Profile Image',
+            variable: 'profileImage',
+            methodForUpdateError: 'updateErrorProfileImage',
+            errorVariable: 'errorProfileImage',
+            type: 'image',
+          },
+        ],
+      },
     });
   }
 }

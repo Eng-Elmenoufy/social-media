@@ -30,8 +30,8 @@
   </div>
   } @else {
   <div class="flex items-center">
-    <div class="flex mr-4">
-      <img [src]="user().profile_image" class="rounded-[50%] w-[30px] h-[30px] mr-2" alt="profile image" />
+    <div class="flex mr-4 cursor-pointer" [routerLink]="['/profile/', user().id]">
+      <img [src]="ProfileImageSrc()" class="rounded-[50%] w-[30px] h-[30px] mr-2" alt="profile image" />
 
       <h6 class="flex items-center font-medium !text-base ml-2">
         {{ user().username }}
@@ -45,7 +45,7 @@
     >
       Logout
     </button> -->
-    <button mat-raised-button (click)="openLogout('0ms', '0ms')">Logout</button>
+    <button mat-raised-button (click)="openLogout()">Logout</button>
   </div>
   }
 </mat-toolbar>
