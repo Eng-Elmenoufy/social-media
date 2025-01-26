@@ -1,11 +1,4 @@
-import {
-  Component,
-  Inject,
-  inject,
-  OnInit,
-  signal,
-  Signal,
-} from '@angular/core';
+import { Component, Inject, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -58,8 +51,8 @@ export class FormComponent implements OnInit {
     Validators.minLength(6),
   ]);
   readonly name = new FormControl('', [Validators.required]);
-  readonly email = new FormControl('', [Validators.required, Validators.email]);
-  title = new FormControl('', [Validators.required]);
+  readonly email = new FormControl('', [Validators.email]);
+  title = new FormControl('');
   body = new FormControl('', [Validators.required]);
   profileImage = new FormControl();
   private route = inject(Router);
@@ -212,13 +205,20 @@ export class FormComponent implements OnInit {
         this.name.valid &&
         this.email.valid
       ) {
-        const formData: RegisterForm = {
+        let formData: RegisterForm = {
           username: this.userName.value!,
           password: this.password.value!,
-          image: this.profileImage!,
           name: this.name.value!,
-          email: this.email.value!,
         };
+
+        if (this.profileImage?.value !== null) {
+          formData = { ...formData, image: this.profileImage };
+        }
+
+        if (this.email.value) {
+          formData = { ...formData, email: this.email.value };
+        }
+
         this.auth.register(formData).subscribe({
           next: () => {
             this.auth.message.set({
@@ -243,11 +243,23 @@ export class FormComponent implements OnInit {
         content: 'You have been logged out. See you soon!',
       });
     } else if (this.data.type === 'Add Post') {
-      const formData = {
-        title: this.title.value!,
-        body: this.body.value!,
-        image: this.profileImage!,
+      type FormDataType = {
+        body: string | null;
+        image?: any;
+        title?: string;
       };
+      let formData: FormDataType = {
+        body: this.body.value,
+      };
+
+      if (this.profileImage?.value !== null) {
+        formData = { ...formData, image: this.profileImage };
+      }
+
+      if (this.title.value) {
+        formData = { ...formData, title: this.title.value };
+      }
+
       this.auth.addPost(formData).subscribe({
         next: () => {
           this.auth.message.set({
@@ -297,6 +309,15 @@ export class FormComponent implements OnInit {
             });
           },
         });
+    }
+    console.log(`email ${this.errorEmail()}`);
+    console.log(`body ${this.errorBody()}`);
+    console.log(`name ${this.errorName()}`);
+    console.log(`password ${this.errorPassword()}`);
+    console.log(`title ${this.errorTitle()}`);
+    console.log(`userName ${this.errorUserName()}`);
+    if (this.data.formsFields && this.data.formsFields.length > 0) {
+      console.log(`${this[this.data.formsFields[0].errorVariable]()}`);
     }
   }
 }

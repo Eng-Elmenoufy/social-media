@@ -14,17 +14,17 @@
     @for (formField of data.formsFields; track formField.label) {
     @if (formField.type === 'image') {
     <div class="file-input-container">
-      <label class="block text-base font-medium pl-1 mb-1">Profile Image</label>
+      <label class="block text-base font-medium pl-2 mb-1">Profile Image</label>
       <input (change)="imageUpload($event)" type="file"
         class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-medium file:bg-violet-50 file:text-blue-700 hover:file:bg-violet-100" />
     </div>
     }
     @else if (formField.type === 'textarea') {
-    <div class="mb-2">
-      <label class="block text-base font-medium pl-1 mb-1">{{formField.label}}</label>
-      <mat-form-field appearance="outline">
+    <div>
+      <label class="block text-base font-medium pl-2 mb-1">{{formField.label}}</label>
+      <mat-form-field appearance="outline" class="input">
         <textarea matInput [placeholder]="'Enter ' + formField.label" [formControl]="this[formField.variable]"
-          (blur)="this[formField.methodForUpdateError]()" required></textarea>
+          (blur)="this[formField.methodForUpdateError]()" class="input"></textarea>
         @if (this[formField.variable].invalid) {
         <mat-error>{{this[formField.errorVariable]()}}</mat-error>
         }
@@ -32,11 +32,11 @@
     </div>
     }
     @else {
-    <div class="mb-2">
-      <label class="block text-base font-medium pl-1 mb-1">{{formField.label}}</label>
-      <mat-form-field appearance="outline">
+    <div>
+      <label class="block text-base font-medium pl-2 mb-1">{{formField.label}}</label>
+      <mat-form-field appearance="outline" class="input">
         <input matInput [placeholder]="'Enter ' + formField.label" [formControl]="this[formField.variable]"
-          (blur)="this[formField.methodForUpdateError]()" required [type]="formField.type" />
+          (blur)="this[formField.methodForUpdateError]()" [type]="formField.type" />
         @if (this[formField.variable].invalid) {
         <mat-error>{{this[formField.errorVariable]()}}</mat-error>
         }
@@ -46,9 +46,12 @@
     }
     }
   </mat-dialog-content>
-  <mat-dialog-actions>
-    <button mat-button mat-dialog-close>{{data.type === 'Logout' ? 'No' : 'Close'}}</button>
-    <button mat-button mat-dialog-close cdkFocusInitial (click)="onSubmit()">
+  <mat-dialog-actions class="button">
+    <button mat-button mat-dialog-close
+      [ngClass]="{'!bg-[#E0E0E0] !text-[#333333]': data.type === 'Delete' || data.type === 'Logout'}">{{data.type ===
+      'Logout' ? 'No' : 'Close'}}</button>
+    <button mat-button mat-dialog-close cdkFocusInitial (click)="onSubmit()"
+      [ngClass]="{'!bg-[#FF4444] !text-[#FFFFFF]': data.type === 'Delete' || data.type === 'Logout'}">
       {{data.type === 'Logout' ? 'Yes' : data.type === 'Update Post' ? 'Update' : data.type }}
     </button>
   </mat-dialog-actions>

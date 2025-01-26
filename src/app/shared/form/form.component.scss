@@ -9,10 +9,32 @@
   );
 }
 
+.input {
+  @include mat.form-field-overrides(
+    (
+      outlined-container-shape: 25px,
+    )
+  );
+}
+
 ::ng-deep {
   .mat-mdc-dialog-surface {
     overflow: hidden !important;
   }
+}
+
+.button {
+  @include mat.button-overrides(
+    (
+      protected-ripple-color: orange,
+      filled-label-text-color: red,
+    )
+  );
+}
+
+// for change the default border radius in form field
+.mat-mdc-text-field-wrapper.mdc-text-field.mdc-text-field--outlined.mdc-text-field--no-label {
+  border-radius: 25px !important;
 }
 
 mat-form-field {
